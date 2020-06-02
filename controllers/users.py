@@ -1,4 +1,4 @@
-from controllers.database import DB
+from controllers.database import DB, UniqueViolation
 import hashlib
 
 def hash_password(password: str) -> str:

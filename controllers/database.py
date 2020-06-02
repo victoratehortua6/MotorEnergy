@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2.errors import UniqueViolation
 from os import environ
 
 DB_CONFIG = {

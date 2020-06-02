@@ -1,7 +1,6 @@
 from flask import Blueprint, jsonify, request
-from controllers.users import UserController
+from controllers.users import UserController, UniqueViolation
 from jsonschema import validate, ValidationError
-from psycopg2.errors import UniqueViolation
 
 router = Blueprint('users api', __name__)
 
