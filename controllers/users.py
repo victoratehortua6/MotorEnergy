@@ -136,17 +136,21 @@ class UserController:
 		fields = [ 'f_name', 'f_last_name', 'email', 'password' ]
 		data = [ kwargs['f_name'].lower(), kwargs['f_last_name'].lower(), kwargs['email'], hash_password(kwargs['password']) ]
 
-		if 's_name' in kwargs:
+		if kwargs.get('s_name', None) is not None and kwargs.get('s_name', None) != '':
 			fields.append('s_name')
 			data.append(kwargs['s_name'].lower())
 
-		if 's_last_name' in kwargs:
+		if kwargs.get('s_last_name', None) is not None and kwargs.get('s_last_name', None) != '':
 			fields.append('s_last_name')
 			data.append(kwargs['s_last_name'].lower())
 
 		cursor = DB.cursor()
 
-		cursor.execute(f"INSERT INTO users ({ ', '.join(fields) }) VALUES ({ ', '.join(list(map(lambda f: '%s', fields))) }) RETURNING id", data)
+		try:
+			cursor.execute(f"INSERT INTO users ({ ', '.join(fields) }) VALUES ({ ', '.join(list(map(lambda f: '%s', fields))) }) RETURNING id", data)
+		except Exception as e:
+			DB.rollback()
+			raise e
 
 		uid = cursor.fetchone()[0]
 
@@ -161,13 +165,23 @@ class UserController:
 		for index in kwargs:
 			if 'f_name' == index or 's_name' == index or 'f_last_name' == index or 's_last_name' == index or 'email' == index:
 				fields.append(index)
-				data.append(kwargs[index])
+				if kwargs[index] != '' and kwargs[index] != None:
+					if 'f_name' == index or 's_name' == index or 'f_last_name' == index or 's_last_name' == index:
+						data.append(kwargs[index].lower())
+					else:
+						data.append(kwargs[index])
+				else:
+					data.append(None)
 
 		cursor = DB.cursor()
 
 		data.append(uid)
 
-		cursor.execute(f"UPDATE users SET { ', '.join(list(map(lambda f: '{} = %s'.format(f), fields))) } WHERE id = %s", data)
+		try:
+			cursor.execute(f"UPDATE users SET { ', '.join(list(map(lambda f: '{} = %s'.format(f), fields))) } WHERE id = %s", data)
+		except Exception as e:
+			DB.rollback()
+			raise e
 
 		if cursor.rowcount == 0:
 			DB.rollback()
@@ -181,7 +195,11 @@ class UserController:
 	def change_password(uid: int, password: str) -> bool:
 		cursor = DB.cursor()
 
-		cursor.execute("UPDATE users SET password = %s WHERE id = %s", [ hash_password(password), uid ])
+		try:
+			cursor.execute("UPDATE users SET password = %s WHERE id = %s", [ hash_password(password), uid ])
+		except Exception as e:
+			DB.rollback()
+			raise e
 
 		if cursor.rowcount == 0:
 			DB.rollback()
@@ -195,7 +213,11 @@ class UserController:
 	def delete(uid: int) -> bool:
 		cursor = DB.cursor()
 
-		cursor.execute("DELETE FROM users WHERE id = %s", [ uid ])
+		try:
+			cursor.execute("DELETE FROM users WHERE id = %s", [ uid ])
+		except Exception as e:
+			DB.rollback()
+			raise e
 
 		if cursor.rowcount == 0:
 			DB.rollback()
