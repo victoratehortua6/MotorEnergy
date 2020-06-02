@@ -142,8 +142,12 @@ def modify(uid: int):
 		if form[index] != '':
 			data[index] = form.get(index)
 
-	data['f_name'] = data.pop('fName')
-	data['f_last_name'] = data.pop('fLastName')
+	if 'fName' in data:
+		data['f_name'] = data.pop('fName')
+
+	if 'fLastName' in data:
+		data['f_last_name'] = data.pop('fLastName')
+
 	if 'sName' in data:
 		if data.get('sName') == 'null':
 			data['s_name'] = None
