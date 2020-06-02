@@ -86,7 +86,7 @@ class UserController:
 	def get_one(uid: int) -> User or None:
 		cursor = DB.cursor()
 
-		cursor.execute("SELECT f_name, s_name, f_last_name, s_last_name, email, creation FROM users WHERE id = %s", [ uid ])
+		cursor.execute("SELECT f_name, s_name, f_last_name, s_last_name, email, creation FROM users WHERE id = %s ORDER BY id ASC", [ uid ])
 
 		data = cursor.fetchone()
 		if data == None:
