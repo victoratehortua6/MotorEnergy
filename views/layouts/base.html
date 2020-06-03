@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<!-- META -->	
+	<meta charset="UTF-8">
+	<!-- CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	{% block css %}{% endblock %}
+
+	<!-- JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	{% block js %}{% endblock %}
+
+	{% if title %}
+		<title>Motor Energy - {{ title }}</title>
+	{% else	%}
+		<title> MotorEnergy </title>
+	{% endif %}
+</head>
+<body>
+	{% block body %}
+		
+	{% endblock %}
+</body>
+</html>
