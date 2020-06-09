@@ -83,6 +83,7 @@ class UserController:
 
 		return users
 
+	@staticmethod
 	def get_one(uid: int) -> User or None:
 		cursor = DB.cursor()
 
@@ -106,6 +107,7 @@ class UserController:
 
 		return User(**user)
 
+	@staticmethod
 	def get_login(email: str, password: str) -> User:
 		cursor = DB.cursor()
 
@@ -129,6 +131,7 @@ class UserController:
 
 		return User(**user)
 
+	@staticmethod
 	def create(**kwargs) -> int:
 		if 'f_name' not in kwargs and 'f_last_name' not in kwargs and 'email' not in kwargs and 'password' not in kwargs:
 			raise ValueException('Some field are required')
@@ -159,6 +162,7 @@ class UserController:
 
 		return uid
 
+	@staticmethod
 	def modify(uid: int, **kwargs) -> bool:
 		fields = [ ]
 		data = [ ]
@@ -192,6 +196,7 @@ class UserController:
 			cursor.close()
 			return True
 
+	@staticmethod
 	def change_password(uid: int, password: str) -> bool:
 		cursor = DB.cursor()
 
@@ -210,6 +215,7 @@ class UserController:
 			cursor.close()
 			return True
 
+	@staticmethod
 	def delete(uid: int) -> bool:
 		cursor = DB.cursor()
 
